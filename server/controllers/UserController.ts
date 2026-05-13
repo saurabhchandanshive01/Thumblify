@@ -11,14 +11,14 @@ export const getUsersThumbnails = async (
 
         const { userId } = req.session as any;
 
-        const thumbnail = await Thumbnail.find({
+        const thumbnails = await Thumbnail.find({
             userId
         }).sort({
             createdAt: -1
         });
 
         res.json({
-            thumbnail
+            thumbnails
         });
 
     } catch (error: any) {

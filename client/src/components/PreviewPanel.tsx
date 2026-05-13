@@ -18,9 +18,22 @@ const PreviewPanel = ({
     } as Record<AspectRatio, string>;
 
     const onDownload = () => {
+
         if (!thumbnail?.image_url) return;
-        window.open(thumbnail.image_url, '_blank')
-    }
+
+        const link = document.createElement("a");
+
+        link.href = thumbnail.image_url.replace(
+            "/upload",
+            "/upload/fl_attachment"
+        );
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        link.remove();
+    };
 
     return (
         <div className="relative mx-auto w-full max-w-2xl">
