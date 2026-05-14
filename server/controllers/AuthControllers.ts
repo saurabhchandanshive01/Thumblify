@@ -37,7 +37,7 @@ export const registerUser = async (
 
         // setting user data in session
         req.session.isLoggedIn = true;
-        req.session.userId = newUser._id;
+        req.session.userId = newUser._id.toString();
 
         return res.json({
             message: 'Account created successfully',
@@ -86,7 +86,7 @@ export const loginUser = async (
 
         // setting user data in session
         req.session.isLoggedIn = true;
-        req.session.userId = user._id;
+        req.session.userId = user._id.toString();
 
         return res.json({
             message: 'Login successful',

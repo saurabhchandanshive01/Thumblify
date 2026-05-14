@@ -54,38 +54,30 @@ const Generate = () => {
 
     setLoading(true);
 
-    const apiPayload = {
-      title,
-      prompt: additionalDetails,
-      style,
-      aspect_ratio: aspectRatio,
-      color_scheme: colorSchemeId,
-      text_overlay: true,
-    };
-
-    const { data } = await api.post(
-      "/api/thumbnail/generate",
-      apiPayload
-    );
-
-    if (data.thumbnail) {
-      navigate("/generate/" + data.thumbnail._id);
-      toast.success(data.message);
-    }
-    setLoading(true);
-
     try {
-      console.log({
+      const apiPayload = {
         title,
-        additionalDetails,
-        aspectRatio,
-        colorSchemeId,
+        prompt: additionalDetails,
         style,
-      });
+        aspect_ratio: aspectRatio,
+        color_scheme: colorSchemeId,
+        text_overlay: true,
+      };
 
-      // later API call here
-    } catch (error) {
+      const { data } = await api.post(
+        "/api/thumbnail/generate",
+        apiPayload
+      );
+
+      if (data.thumbnail) {
+        navigate("/generate/" + data.thumbnail._id);
+        toast.success(data.message);
+      }
+    } catch (error: any) {
       console.log(error);
+      toast.error(
+        error?.response?.data?.message || error.message
+      );
     } finally {
       setLoading(false);
     }

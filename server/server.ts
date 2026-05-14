@@ -11,6 +11,7 @@ import MongoStore from 'connect-mongo'
 import AuthRouter from "./routes/AuthRoutes.js";
 import ThumbnailRouter from "./routes/ThumbnailRoutes.js";
 import UserRouter from "./routes/UserRoutes.js";
+import { v2 as cloudinary } from 'cloudinary';
 
 declare module 'express-session' {
     interface SessionData {
@@ -19,12 +20,33 @@ declare module 'express-session' {
     }
 }
 
+const requiredEnv = [
+    'SESSION_SECRET',
+    'MONGODB_URI',
+    'GEMINI_API_KEY',
+    'CLOUDINARY_URL'
+];
+
+for (const envName of requiredEnv) {
+    if (!process.env[envName]) {
+        throw new Error(`${envName} is missing`);
+    }
+}
+
+cloudinary.config({
+    secure: true
+});
+
 await connectDB();
 
 const app = express();
 
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:3000', "https://thumblify-lilac-five.vercel.app/"],
+    origin: [
+        'http://localhost:5173',
+        'http://localhost:3000',
+        'https://thumblify-lilac-five.vercel.app'
+    ],
     credentials: true
 }))
 

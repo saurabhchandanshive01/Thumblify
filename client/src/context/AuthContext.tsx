@@ -81,7 +81,11 @@ export const AuthProvider = ({
             toast.success(data.message);
         } catch (error: any) {
             console.log(error);
-            toast.error(error.response?.data?.message);
+            toast.error(
+                error.response?.data?.message ||
+                error.message ||
+                "Signup failed"
+            );
         }
     };
 
@@ -109,7 +113,11 @@ export const AuthProvider = ({
             toast.success(data.message);
         } catch (error: any) {
             console.log(error);
-            toast.error(error.response?.data?.message);
+            toast.error(
+                error.response?.data?.message ||
+                error.message ||
+                "Login failed"
+            );
         }
     };
 
@@ -125,7 +133,11 @@ export const AuthProvider = ({
             toast.success(data.message);
         } catch (error: any) {
             console.log(error);
-            toast.error(error.response?.data?.message);
+            toast.error(
+                error.response?.data?.message ||
+                error.message ||
+                "Logout failed"
+            );
         }
     };
 

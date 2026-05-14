@@ -228,7 +228,7 @@ export const deleteThumbnail = async (
         const { id } = req.params;
         const { userId } = req.session as any;
 
-        await Thumbnail.findByIdAndDelete({
+        await Thumbnail.findOneAndDelete({
             _id: id,
             userId
         });
