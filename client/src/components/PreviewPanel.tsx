@@ -103,11 +103,14 @@ const PreviewPanel = ({
                         <div className="px-4 text-center">
 
                             <p className="font-medium text-zinc-200">
-                                Generate your first thumbnail
+                                {thumbnail?.generation_error
+                                    ? "Thumbnail generation failed"
+                                    : "Generate your first thumbnail"}
                             </p>
 
                             <p className="mt-1 text-xs text-zinc-400">
-                                Fill out the form and click Generate
+                                {thumbnail?.generation_error ||
+                                    "Fill out the form and click Generate"}
                             </p>
 
                         </div>

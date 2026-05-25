@@ -45,6 +45,7 @@ export interface IThumbnail {
     prompt_used?: string;
     user_prompt?: string;
     isGenerating?: boolean;
+    generation_error?: string;
     createdAt?: Date;
     updatedAt?: Date;
 }

@@ -37,6 +37,8 @@ export interface IThumbnail extends Document {
 
     isGenerating?: boolean;
 
+    generation_error?: string;
+
     createdAt?: Date;
 
     updatedAt?: Date;
@@ -117,6 +119,11 @@ const ThumbnailSchema = new mongoose.Schema<IThumbnail>(
         isGenerating: {
             type: Boolean,
             default: true
+        },
+
+        generation_error: {
+            type: String,
+            default: ''
         }
 
     },

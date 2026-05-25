@@ -8,6 +8,7 @@ import {
 } from '@google/genai';
 
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 
 import ai from '../configs/ai.js';
@@ -60,6 +61,8 @@ export const generateThumbnail = async (
     req: Request,
     res: Response
 ) => {
+    let thumbnail: any = null;
+
     try {
 
         const { userId } = req.session as any;
@@ -73,7 +76,7 @@ export const generateThumbnail = async (
             text_overlay
         } = req.body;
 
-        const thumbnail = await Thumbnail.create({
+        thumbnail = await Thumbnail.create({
             userId,
             title,
             prompt_used: user_prompt,
@@ -135,7 +138,12 @@ export const generateThumbnail = async (
         }
 
         if (text_overlay) {
-            prompt += ` Add bold readable text overlay saying: "${text_overlay}".`;
+            const overlayText =
+                typeof text_overlay === 'string'
+                    ? text_overlay
+                    : title;
+
+            prompt += ` Add bold readable text overlay saying: "${overlayText}".`;
         }
 
         prompt += ` The thumbnail should be ${aspect_ratio || '16:9'
@@ -171,7 +179,7 @@ export const generateThumbnail = async (
         }
 
         // Create images folder
-        const imagesDir = path.join(process.cwd(), 'images');
+        const imagesDir = path.join(os.tmpdir(), 'thumblify-images');
 
         fs.mkdirSync(imagesDir, {
             recursive: true
@@ -211,8 +219,21 @@ export const generateThumbnail = async (
 
         console.log(error);
 
+        const rawMessage =
+            error?.message || 'Something went wrong';
+
+        const message = rawMessage.includes('generate_content_free_tier')
+            ? 'Gemini image generation quota is exhausted or not enabled for this API key. Enable billing or use an API key/project with image-generation quota.'
+            : rawMessage;
+
+        if (thumbnail) {
+            thumbnail.isGenerating = false;
+            thumbnail.generation_error = message;
+            await thumbnail.save();
+        }
+
         return res.status(500).json({
-            message: error.message || 'Something went wrong'
+            message
         });
     }
 };
